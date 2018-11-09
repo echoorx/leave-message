@@ -1,15 +1,30 @@
+const proApi = require('./utils/project.config.js')
 //app.js
 App({
   onLaunch: function () {
+    var that = this
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
-
+  
     // 登录
     wx.login({
       success: res => {
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        console.log(res.code)
+        wx.request({
+          url: 'https://api.weixin.qq.com/sns/jscode2session',
+          data: {
+            js_code: res.code,
+            appid: proApi.appid,
+            secret: proApi.secret,
+            grant_type: proApi.grant_type
+          },
+          success (res) {
+            that.globalData.userOS = res.data
+          }
+        })
       }
     })
     // 获取用户信息
@@ -29,11 +44,62 @@ App({
               }
             }
           })
+        } else {
+          wx.authorize({
+            scope: 'scope.userInfo',
+            success() {
+              wx.getUserInfo({
+                success: res => {
+                  // 可以将 res 发送给后台解码出 unionId
+                  this.globalData.userInfo = res.userInfo
+
+                  // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+                  // 所以此处加入 callback 以防止这种情况
+                  if (this.userInfoReadyCallback) {
+                    this.userInfoReadyCallback(res)
+                  }
+                }
+              })
+            }
+          })
         }
+      },
+      fail: function (res) {
+        that.data.nickName = "未授权无法获取用户信息",
+        that.setData({
+          nickName: that.data.nickName
+        })
+        wx.showToast({
+          title: '未授权无法获取用户信息',
+          icon: 'error',
+          duration: 1000
+        })
       }
     })
   },
+  getLocationInfo: function (cb) {
+    var that = this;
+    if (this.globalData.locationInfo) {
+      cb(this.globalData.locationInfo)
+    } else {
+      wx.getLocation({
+        type: 'gcj02', // 默认为 wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标
+        altitude: true,
+        success: function (res) {
+          that.globalData.locationInfo = res;
+          cb(that.globalData.locationInfo)
+        },
+        fail: function () {
+          // fail
+        },
+        complete: function () {
+          // complete
+        }
+      })
+    }
+  },
   globalData: {
-    userInfo: null
+    userInfo: null,
+    locationInfo: null
   }
 })

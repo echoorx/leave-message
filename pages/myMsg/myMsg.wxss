@@ -1,0 +1,5 @@
+.del {
+  font-size: 10px;
+  color: #3399ea;
+  float: right;
+}

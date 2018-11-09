@@ -1,0 +1,31 @@
+/* pages/newmsg/newmsg.wxss */
+.map {
+  width:100%;
+}
+.section {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.title {
+  border: 1px solid skyblue;
+}
+.my_ta {
+  width: 100%;
+  border: 1px solid skyblue;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.toast_style {
+  position: fixed;
+  z-index: 999;
+  bottom: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: orange;
+  width: 200px;
+  height:40px;
+  text-align: center;
+  background: #eee;
+  opacity: 0.7;
+  line-height: 40px;
+}

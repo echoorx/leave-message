@@ -13,7 +13,9 @@ Page({
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     inputShowed: false,
     inputVal: "",
-    msglist: []
+    msglist: [],
+    cpage: 1,
+    total: 0
   },
   //事件处理函数
   // bindViewTap: function() {
@@ -21,7 +23,7 @@ Page({
   //     url: '../logs/logs'
   //   })
   // },
-  onLoad () {
+  onLoad() {
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -52,7 +54,8 @@ Page({
       icon20: base64.icon20,
       icon60: base64.icon60
     })
-    this.getList()
+    // console.log(this, 'route')
+    this.getList(this.route)
   },
   getUserInfo (e) {
     console.log(e)
@@ -83,19 +86,57 @@ Page({
       inputVal: e.detail.value
     })
   },
-  getList () {
+  getList (cpage) {
     let _self = this
+    var page = cpage || 1
+    console.log(page)
     wx.request({
-      url: baseUrl + 'msglist',
+      url: baseUrl + 'getAllMsg',
+      data: {
+        page
+      },
       success(res) {
         console.log(res.data)
-        res.data.forEach((item) => {
-          item.ctime = util.myFormatTime(item.ctime)
+        res.data.data.forEach((item) => {
+          item.createdAt = util.myFormatTime(item.createdAt)
         })
         _self.setData({
-          msglist: res.data
+          msglist: _self.data.msglist.concat(res.data.data),
+          total: res.data.total
         })
-      }
+      },
+
+      
     })
+  },
+  loadMore () {
+    this.setData({
+      cpage: ++this.data.cpage
+    })
+    console.log(this.data.cpage,'this.data.cpage')
+    this.getList(this.data.cpage)
+  },
+  onReady () {
+    //获得dialog组件
+    this.dialog = this.selectComponent("#dialog");
+  },
+  showDialog() {
+    this.dialog.showDialog();
+  },
+
+  //取消事件
+  _cancelEvent() {
+    console.log('你点击了取消');
+    this.dialog.hideDialog();
+  },
+  //确认事件
+  _confirmEvent() {
+    console.log('你点击了确定');
+    this.dialog.hideDialog();
+  },
+  onReachBottom(){
+    if (this.data.total > this.data.msglist.length){
+      this.loadMore()
+    }
   }
 })

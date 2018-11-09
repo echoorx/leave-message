@@ -1,0 +1,20 @@
+<view>  
+  <view class='comments_box' wx:for='{{ commentsList }}' wx:key='key'>
+    <view class='avatar_style'>
+      <image class='img_style' src='{{ item.userInfo.avatarUrl }}'></image>
+    </view>
+    <view class='info'>
+      <view class='info_text'>
+        <view class='nickName'>{{ item.userInfo.nickName }}</view>
+        <view class='pos_style'>{{ item.userInfo.city }}</view>
+        <view class='time'>{{ item.createdAt }}</view>
+      </view>
+      <view>
+        <view>
+          {{ item.content }}
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class='no_more' wx:if="{{total <= commentsList.length}}">没有数据了</view>
+</view>

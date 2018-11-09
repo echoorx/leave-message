@@ -1,4 +1,4 @@
-// pages/maps/maps.js
+// pages/myReply/myReply.js
 Page({
 
   /**
@@ -11,8 +11,8 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad (options) {
-    // this.getCurrentPos()
+  onLoad: function (options) {
+
   },
 
   /**
@@ -62,17 +62,5 @@ Page({
    */
   onShareAppMessage: function () {
 
-  },
-  getCurrentPos: function () {
-    var that = this
-    wx.getLocation({
-      type: 'wgs84',    //返回可以用于wx.openLocation的经纬度
-      success: function (res) {
-        var latitude = res.latitude    //维度
-        var longitude = res.longitude    //经度
-        console.log(res)
-        // that.loadCity(latitude, longitude)
-      }
-    })
   }
 })

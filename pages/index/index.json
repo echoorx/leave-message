@@ -1,1 +1,6 @@
-{}
+{
+  "usingComponents": {
+    "dialog": "/components/dialog"
+  },
+  "onReachBottomDistance": 0
+}

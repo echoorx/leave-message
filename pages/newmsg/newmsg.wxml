@@ -1,0 +1,23 @@
+<view>
+  <form bindsubmit="bindFormSubmit" bindreset="formReset">
+    <view class='section'>
+      <view class="">商区:</view>
+      <view>
+        <map id="myMap" show-location latitude='{{latitude}}' longitude='{{longitude}}' markers="{{markers}}" controls=''/>
+      </view>
+    </view>
+    <view class='section'>
+      <view class="">标题:</view>
+      <view>
+        <input class='title' name="title" placeholder="纸条标题"/>
+      </view>
+    </view>
+    <view class='section'>
+      <view class="">信息:</view>
+      <textarea placeholder="纸条信息" name="content" class='my_ta'/>
+      <button form-type="submit"> 提交 </button>
+      <button formType="reset" style='display:none' ref="reset">Reset</button>
+    </view> 
+  </form>
+</view>
+<view class='toast_style' wx:if="{{showTips}}">{{tips}}</view>

@@ -32,15 +32,6 @@
 .weui-cell{
     padding: 12px 15px 12px 35px; 
 }
-.weui-panel__hd:after {
-  left: 0;
-}
-.weui-media-box:before {
-  left: 0;
-}
-.weui-cell:before {
-  left: 0;
-}
 .np_search {
   position: fixed;
   top: 0;
@@ -49,24 +40,11 @@
   width: 100%;
 }
 .weui-media-box__info {
-  margin-top: 10px;
-}
-.my_card_top {
-  /* display: flex; */
-  font-size: 16px;
-}
-.title_style {
-  display: inline-block;
-  vertical-align: bottom;
-}
-.area_style {
-  display: inline-block;
-  vertical-align: bottom;  
-  margin-left: 16px;
-  width: 70%;
-  color: #666;
+  width: 100%;
   overflow: hidden;
-  /* background: black; */
   white-space: nowrap;
-  text-overflow: ellipsis;
+  text-overflow:ellipsis;
+  display:flex;
+  flex-wrap:nowrap;
+  margin-top: 10px;
 }

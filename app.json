@@ -1,25 +1,31 @@
 {
   "pages":[
     "pages/index/index",
-    "pages/logs/logs",
-    "pages/maps/maps"
+    "pages/settings/settings",
+    "pages/newmsg/newmsg",
+    "pages/maps/maps",
+    "pages/myReply/myReply",
+    "pages/myMsg/myMsg",
+    "pages/msgDetail/msgDetail"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "Leave a message",
-    "navigationBarTextStyle":"black"
+  "window": {
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "leave a message",
+    "backgroundColor": "#eeeeee",
+    "backgroundTextStyle": "light"
   },
   "tabBar": {
+    "backgroundColor": "#fff",
     "list": [
       {
         "pagePath": "pages/index/index",
         "text": "首页"
       },{
-        "pagePath": "pages/maps/maps",
+        "pagePath": "pages/newmsg/newmsg",
         "text": "写留言"
       },{
-        "pagePath": "pages/logs/logs",
+        "pagePath": "pages/settings/settings",
         "text": "我的"
       }
     ]

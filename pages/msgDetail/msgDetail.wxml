@@ -1,0 +1,38 @@
+<view class='detail_outter'>
+  <view class='detail_top'>
+    <view class='head_img_box'>
+      <image src='{{ msgObj.userInfo.avatarUrl }}' class='head_img'></image>
+    </view>
+    <view class='detail_top_info'>
+      <view>{{ msgObj.title }}</view>
+      <view class='area'>{{ msgObj.userInfo.city }}</view>
+      <view class='weui-media-box__info'>
+        <text>{{ msgObj.createdAt }}</text> | <text>{{ msgObj.userInfo.nickName }}</text>
+      </view>
+    </view>
+    <view class='bixin'>❤️</view>
+    <view class='addComments' bindtap='showCommentsBox'>+评论</view>
+  </view>
+  <view>
+  <view class='detail_nav'>
+    <view wx:for='{{navList}}' class='nav_content' wx:key="index" data-type='{{item.label}}' bindtap='changeBottom'>{{ item.label }}</view>
+  </view>
+  </view>
+  <view class='content' wx:if="{{bottomType == '便签'}}">
+    {{ msgObj.content }}
+  </view>
+  <view class="comments_section" wx:elif="{{bottomType == '评论'}}">
+    <scroll-view scroll-y style="height: 100%" enable-back-to-top="true">
+      <comments commentsList="{{comments}}" total="{{total}}"></comments>
+    </scroll-view>
+  </view>
+  <view class='comments_box' wx:if="{{commentsBox}}">
+    <form bindsubmit="formSubmit" bindreset="formReset">
+      <view class="comments_box_section">
+        <view class="section__title">评论</view>
+        <input name="input" placeholder="please input here" class='comments_content' />
+        <button formType="submit" class='submit_style'>提交</button>
+      </view>
+    </form>
+  </view>
+</view>
