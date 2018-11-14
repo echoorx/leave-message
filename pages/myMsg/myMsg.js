@@ -1,5 +1,6 @@
 const baseUrl = require('../../utils/api.config.js').baseUrl;
 const util = require('../../utils/util.js');
+const MsgControllers = require('../../controllers/msg.js')
 const app = getApp();
 // pages/myMsg/myMsg.js
 Page({
@@ -22,22 +23,32 @@ Page({
   getList(cpage) {
     let _self = this
     var page = cpage || 1
-    wx.request({
-      url: baseUrl + 'getMyMsg',
-      data: {
-        openid: app.globalData.userOS.openid,
+    MsgControllers.getMsgTotal({
+      _openid: app.globalData.userOS.openid
+    }).then(total => {
+      MsgControllers.getAllMsg({
         page
-      },
-      success(res) {
+      }).then(res => {
         console.log(res.data)
-        res.data.data.forEach((item) => {
+        res.data.forEach((item) => {
           item.createdAt = util.myFormatTime(item.createdAt)
         })
-        _self.setData({
-          msglist: _self.data.msglist.concat(res.data.data),
-          total: res.data.total
-        })
-      }
+        if (page == 1) {
+          _self.setData({
+            msglist: res.data,
+            total: total.total
+          })
+        } else {
+          _self.setData({
+            msglist: _self.data.msglist.concat(res.data),
+            total: total.total
+          })
+        }
+      }).catch(err => {
+        console.log(err, 'getAllMsg err')
+      })
+    }).catch(err => {
+      console.log(err, 'getMsgTotal err')
     })
   },
   loadMore() {
@@ -47,8 +58,39 @@ Page({
     this.getList(this.data.cpage)
   },
 
-  delFn(id){
-    console.log(id,'123123123123123123123')
+  delFn(e){
+    var _self = this
+    console.log(e.target.dataset.id)
+    console.log('123123123123123123123')
+    wx.showModal({
+      title: '删除提示',
+      content: '确定要删除这纸条吗',
+      confirmText: "yes",
+      cancelText: "no",
+      success (res) {
+        console.log(res)
+        if (res.confirm) {
+          _self.delMessage(e.target.dataset.id)
+        } else {
+          console.log('用户点击辅助操作')
+        }
+      }
+    });
+  },
+
+  delMessage(id){
+    var _self = this
+    wx.request({
+      url: baseUrl + 'delMyMsg',
+      method: 'post',
+      data: {
+        id
+      },
+      success(res) {
+        console.log(res.data)
+        _self.getList()
+      }
+    })
   },
 
   /**

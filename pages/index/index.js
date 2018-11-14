@@ -1,6 +1,7 @@
 var base64 = require("../../assets/images/base64")
 const util = require('../../utils/util.js')
 const baseUrl = require('../../utils/api.config.js').baseUrl
+const MsgControllers = require('../../controllers/msg.js')
 //index.js
 //获取应用实例
 const app = getApp()
@@ -15,7 +16,8 @@ Page({
     inputVal: "",
     msglist: [],
     cpage: 1,
-    total: 0
+    total: 0,
+    scrollTop: 0
   },
   //事件处理函数
   // bindViewTap: function() {
@@ -54,8 +56,16 @@ Page({
       icon20: base64.icon20,
       icon60: base64.icon60
     })
+    wx.getSystemInfo({
+      success: (res) => {
+        this.setData({
+          windowHeight: res.windowHeight,
+          windowWidth: res.windowWidth
+        })
+      }
+    })
     // console.log(this, 'route')
-    this.getList(this.route)
+    this.getList()
   },
   getUserInfo (e) {
     console.log(e)
@@ -89,24 +99,31 @@ Page({
   getList (cpage) {
     let _self = this
     var page = cpage || 1
-    console.log(page)
-    wx.request({
-      url: baseUrl + 'getAllMsg',
-      data: {
+
+    MsgControllers.getMsgTotal({}).then(total => {
+      MsgControllers.getAllMsg({
         page
-      },
-      success(res) {
+      }).then(res => {
         console.log(res.data)
-        res.data.data.forEach((item) => {
+        res.data.forEach((item) => {
           item.createdAt = util.myFormatTime(item.createdAt)
         })
-        _self.setData({
-          msglist: _self.data.msglist.concat(res.data.data),
-          total: res.data.total
-        })
-      },
-
-      
+        if (page == 1) {
+          _self.setData({
+            msglist: res.data,
+            total: total.total
+          })
+        } else {
+          _self.setData({
+            msglist: _self.data.msglist.concat(res.data),
+            total: total.total
+          })
+        }
+      }).catch(err => {
+        console.log(err, 'getAllMsg err')
+      })
+    }).catch(err => {
+      console.log(err, 'getMsgTotal err')
     })
   },
   loadMore () {
@@ -138,5 +155,8 @@ Page({
     if (this.data.total > this.data.msglist.length){
       this.loadMore()
     }
+  },
+  onPullDownRefresh() {
+    this.getList()
   }
 })

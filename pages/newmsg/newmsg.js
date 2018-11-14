@@ -1,5 +1,6 @@
 const baseUrl = require('../../utils/api.config.js').baseUrl
-
+const MsgCollection = require('../../controllers/msg.js')
+const QQMapWX = require('../../libs/qqmap-wx-jssdk.min.js')
 var app = getApp()
 // pages/newmsg/newmsg.js
 Page({
@@ -9,7 +10,8 @@ Page({
    */
   data: {
     showTips: false,
-    tips: ''
+    tips: '',
+    address_component: {}
   },
 
   /**
@@ -32,6 +34,23 @@ Page({
           }
         ]
       })
+
+      var qqmapsdk = new QQMapWX({
+        key: 'DDUBZ-UM564-37HUB-XZ46M-COPBF-5BBNU'
+      })
+      qqmapsdk.reverseGeocoder({
+        location: {
+          latitude: locationInfo.latitude,
+          longitude: locationInfo.longitude
+        },
+        success: function (res) {
+          console.log(res.result.address_component)
+          that.setData({
+            address_component: res.result.address_component
+          })
+        }
+      })
+
     })
   },
 
@@ -40,24 +59,25 @@ Page({
     console.log(e.detail.value)
     let data = e.detail.value
     data.userInfo = app.globalData.userInfo
-    data.openid = app.globalData.userOS.openid
-    console.log(data)
-    wx.request({
-      url: baseUrl + 'addMsg',
-      method: 'post',
-      data: e.detail.value,
-      success (res) {
+    data.createdAt = +new Date()
+    data.address = that.address_component
+    // data.openid = app.globalData.userOS.openid
+    app.getLocationInfo(locationInfo => {
+      data.location = {
+        latitude: locationInfo.latitude,
+        longitude: locationInfo.longitude
+      }
+      console.log(data, 'addMsg Data')
+      MsgCollection.addMsg(data).then(res => {
         console.log(res)
         wx.showToast({
           title: '已提交',
           icon: 'success',
           duration: 1000
         })
-        console.log(e)
-        that.setData({
-          
-        })
-      }
+      }).catch(err => {
+        console.log(err, 'addMsg')
+      })
     })
   },
   /**

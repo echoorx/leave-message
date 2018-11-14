@@ -24,8 +24,7 @@ const formatNumber = n => {
 //   return Y + M + D + h + m + s;
 // }
 
-const myFormatTime = (timeStamp) => {   
-  var dateTimeStamp = timeStamp;
+const myFormatTime = (dateTimeStamp) => {   
   var minute = 1000 * 60;      //把分，时，天，周，半个月，一个月用毫秒表示
   var hour = minute * 60;
   var day = hour * 24;

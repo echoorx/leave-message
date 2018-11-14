@@ -1,13 +1,22 @@
 const proApi = require('./utils/project.config.js')
+var QQMapWX = require('./libs/qqmap-wx-jssdk.min.js');
+
 //app.js
 App({
   onLaunch: function () {
+    wx.cloud.init({
+      env: 'leave-a-message-8300cd'
+    })
+    this.globalData.qqmapsdk = new QQMapWX({
+      key: 'DDUBZ-UM564-37HUB-XZ46M-COPBF-5BBNU'
+      // AVABZ-EIPWP-7RTDK-L6UQ3-SHYET-V5B6V
+    })
+    
     var that = this
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
-  
+    wx.setStorageSync('logs', logs)  
     // 登录
     wx.login({
       success: res => {

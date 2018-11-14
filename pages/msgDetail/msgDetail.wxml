@@ -27,10 +27,10 @@
     </scroll-view>
   </view>
   <view class='comments_box' wx:if="{{commentsBox}}">
-    <form bindsubmit="formSubmit" bindreset="formReset">
+    <form bindsubmit="formSubmit">
       <view class="comments_box_section">
         <view class="section__title">评论</view>
-        <input name="input" placeholder="please input here" class='comments_content' />
+        <input name="c_content" placeholder="please input here" class='comments_content' />
         <button formType="submit" class='submit_style'>提交</button>
       </view>
     </form>

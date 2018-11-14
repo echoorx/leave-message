@@ -44,7 +44,7 @@
             <view class="weui-media-box__info">
               <view class="weui-media-box__info__meta">{{item.createdAt}}</view>
               <view class="weui-media-box__info__meta weui-media-box__info__meta_extra">{{item.userInfo.nickName}}</view>
-              <view class='del' bindtap='delFn({{item._id}})'>删除</view>
+              <view class='del' data-id='{{item._id}}' capture-catch:tap='delFn'>删除</view>
             </view>
           </view>
         </navigator>

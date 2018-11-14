@@ -1,8 +1,8 @@
 {
   "pages":[
+    "pages/newmsg/newmsg",
     "pages/index/index",
     "pages/settings/settings",
-    "pages/newmsg/newmsg",
     "pages/maps/maps",
     "pages/myReply/myReply",
     "pages/myMsg/myMsg",

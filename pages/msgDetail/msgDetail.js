@@ -1,5 +1,7 @@
 const baseUrl = require('../../utils/api.config.js').baseUrl;
 const util = require('../../utils/util.js');
+const MsgControllers = require('../../controllers/msg.js')
+const CommentsControllers = require('../../controllers/comments.js')
 const app = getApp();
 // pages/msgDetail/msgDetail.js
 Page({
@@ -32,20 +34,14 @@ Page({
 
   getDetail(id) {
     var that = this
-    wx.request({
-      url: baseUrl + 'getDetail',
-      data: {
-        id
-      },
-      success: function(res) {
-        console.log(res,'getDetail')
-        res.data.data[0].createdAt = util.myFormatTime(res.data.data[0].createdAt)
-        that.setData({
-          msgObj: res.data.data[0]
-        })
-      },
-      fail: function(res) {},
-      complete: function(res) {},
+    MsgControllers.getDetail(id).then(res => {
+      console.log(res)
+      res.data[0].createdAt = util.myFormatTime(res.data[0].createdAt)
+      that.setData({
+        msgObj: res.data[0]
+      })
+    }).catch(err => {
+      console.log(err, 'getDetail err')
     })
   },
   changeBottom(e){
@@ -61,45 +57,53 @@ Page({
       commentsBox: !this.data.commentsBox
     })
   },
-  addComments () {
+  addComments (comments) {
     var _self = this
     let data = {
       msg_id: _self.data.msgObj._id,
-      content: _self.data.myComments,
-      openid: app.globalData.userOS.openid,
-      userInfo: app.globalData.userInfo
+      content: comments,
+      userInfo: app.globalData.userInfo,
+      createdAt: +new Date()
     }
     console.log(data)
-    wx.request({
-      url: baseUrl + 'addComments',
-      data,
-      method: 'post',
-      success: function (res) {
-        console.log(res,123)
-      },
-      fail: function (res) { },
-      complete: function (res) { },
+    CommentsControllers.addComments(data).then(res => {
+      console.log(res)
+      wx.showToast({
+        title: '已提交',
+        icon: 'success',
+        duration: 1000
+      })
+    }).catch(err => {
+      console.log(err, 'addComments')
     })
   },
   getComments(cpage) {
     var _self = this
     var page = cpage || 1
-    wx.request({
-      url: baseUrl + 'getComments',
-      data: {
-        msg_id: _self.data.msgObj._id,
-        page
-      },
-      success: function(res) {
+    let query = {
+      msg_id: _self.data.msgObj._id
+    }
+    CommentsControllers.getCommentsCount(query).then(total => {
+      query.page = cpage
+      CommentsControllers.getAllComments(query).then( res => {
         console.log(res)
-        _self.setData({
-          comments: _self.data.comments.concat(res.data.data),
-          total: res.data.total
+        res.data.forEach(item => {
+          item.createdAt = util.myFormatTime(item.createdAt)
         })
-      },
-      fail: function(res) {},
-      complete: function(res) {},
+        _self.setData({
+          comments: _self.data.comments.concat(res.data),
+          total: total.total
+        })
+      }).catch(err => {
+        console.log(err, 'getAllComments err')
+      })
+    }).catch(err => {
+      console.log(err, 'getCommentsCount err')
     })
+  },
+  formSubmit (e) {
+    console.log(e.detail.value.c_content)
+    this.addComments(e.detail.value.c_content)
   },
   /**
    * 生命周期函数--监听页面初次渲染完成

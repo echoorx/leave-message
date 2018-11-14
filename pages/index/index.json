@@ -2,5 +2,6 @@
   "usingComponents": {
     "dialog": "/components/dialog"
   },
-  "onReachBottomDistance": 0
+  "onReachBottomDistance": 0,
+  "enablePullDownRefresh": true
 }

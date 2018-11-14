@@ -1,4 +1,4 @@
 let apiConfig =  {
-  baseUrl: 'http://192.168.1.21:3001/'
+  baseUrl: 'http://118.24.113.181:3389/'
 }
 module.exports = apiConfig
